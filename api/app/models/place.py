@@ -1,8 +1,11 @@
 from peewee import *
+from base import *
+from user import *
+from city import *
 
 class Place(BaseModel):
-    owner = ForeignKeyField('User', related_name = 'places')
-    city = ForeignKeyField('City', related_name = 'places')
+    owner = ForeignKeyField(User, related_name = 'places')
+    city = ForeignKeyField(City, related_name = 'places')
     name = CharField(128, null = False)
     description = TextField()
     number_rooms = IntegerField(defautlt = 0)

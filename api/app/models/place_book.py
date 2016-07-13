@@ -1,9 +1,11 @@
 from peewee import *
-import datetime
+from base import * 
+from user import *
+from place import *
 
 class PlaceBook(BaseModel):
-    place = ForeignKeyField('Place')
-    user = ForeignKeyField('User')
+    place = ForeignKeyField(Place)
+    user = ForeignKeyField(User, related_name = "places_booked")
     is_validated = BooleanField(default = False)
-    date_start = datetime(null = False)
+    date_start = DateTimeField(null = False)
     number_nights = IntegerField(default = 1)
