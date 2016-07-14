@@ -1,0 +1,7 @@
+from flask import Flask
+from flask_json import FlaskJSON
+from views import *
+import config
+
+app = Flask(__name__)
+json = FlaskJSON(app)

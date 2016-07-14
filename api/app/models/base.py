@@ -1,7 +1,7 @@
 from peewee import *
 from datetime import datetime
 
-db = SqliteDatabase(
+db = MySQLDatabase(
         host = DATABASE['host'],
         port = DATABASE['port'],
         user = DATABASE['user'],
