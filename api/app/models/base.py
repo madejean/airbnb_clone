@@ -1,13 +1,14 @@
 from peewee import *
 from datetime import datetime
+import config
 
 db = MySQLDatabase(
-        host = DATABASE['host'],
-        port = DATABASE['port'],
-        user = DATABASE['user'],
-        password = DATABASE['password'],
-        database = DATABASE['database'],
-        charset = DATABASE['charset']
+        host = config.DATABASE['host'],
+        port = congig.DATABASE['port'],
+        user = config.DATABASE['user'],
+        password = config.DATABASE['password'],
+        database = config.DATABASE['database'],
+        charset = config.DATABASE['charset']
 )
 
 class BaseModel(peewee.Model):
@@ -17,7 +18,19 @@ class BaseModel(peewee.Model):
 
         def save(self, *args, **kwargs):
                 self.updated_at = datetime.now
-                peewee.Model.save(self)
+                return super(BaseModel, self).save(*args, **kwargs)
+        
+        def to_hash(self, values):
+                values['id'] = self.id
+                try:
+                        values['created_at'] = self.created_at.strftime("%Y/%m/%d %H:%M:%S")
+                except:
+                        values['created_at'] = self.created_at
+                try:
+                        values['updated_at'] = self.updated_at.strftime("%Y/%m/%d %H:%M:%S")
+                except:
+                        values['updated_at'] = self.updated_at
+                return values
                 
 class Meta:
         database = db

@@ -1,4 +1,5 @@
 import os
+
 env_name = os.environ.get('AIRBNB_ENV')
 environment = ['developement', 'production', 'test']
 database = { enviroment[0]:'airbnb_dev', environment[1]:'airbnb_prod', environment[2]:'airbnb_test' }

@@ -1,6 +1,4 @@
 from app import app
-from app.views import *
 from config import *
 
-if __name__ == '__main__':
-    app.run(host=HOST, port=PORT, debug= DEBUG)
+app.run(host=config.HOST, port=config.PORT, debug=config.DEBUG)
