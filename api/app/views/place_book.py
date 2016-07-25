@@ -21,19 +21,19 @@ def get_place_books(place_id):
 @as_json
 def book_place(place_id):
     try:    
-        data = request.values
+        post_data = request.values
         new = PlaceBook.create(
             place = place_id,
-            user = data['user_id'],
-            date_start = datetime.strptime(data['date_start'], "%Y/%m/%d %H:%M:%S")
+            user = post_data['user_id'],
+            date_start = datetime.strptime(post_data['date_start'], "%Y/%m/%d %H:%M:%S")
         )
-        if 'is_validated' in data:
-            if data['is_validated'].lower() == 'true':
+        if 'is_validated' in post_data:
+            if post_data['is_validated'].lower() == 'true':
                 new.is_validated = True
-            elif data['is_validated'].lower() == 'false':
+            elif post_data['is_validated'].lower() == 'false':
                 new.is_validated = False
-        if 'number_nights' in data:
-            new.number_nights = int(data['number_nights'])
+        if 'number_nights' in post_data:
+            new.number_nights = int(post_data['number_nights'])
         new.save()
         return new.to_hash()
     except:
@@ -43,7 +43,7 @@ def book_place(place_id):
 @as_json
 def get_books(place_id, book_id):
     try:
-        get_booking = PlaceBook.get(PlaceBook.id == book_id)
+        get_booking = PlaceBook.get(PlaceBook.id == book_id, PlaceBook.place == place_id)
         return get_booking.to_hash()
     except:
         return {"code":404, "msg":"not found"}, 404
@@ -55,9 +55,9 @@ def del_book(place_id, book_id):
         query = PlaceBook.get(PlaceBook.id == book_id)
     except:
         return {"code":404, "msg":"not found"}, 404
-    out_json = query.to_hash()
+    out_dict = query.to_hash()
     query.delete_instance()
-    return out_json
+    return out_dict
 
 @app.route('/places/<int:place_id>/books/<int:book_id>', methods=['PUT'])
 @as_json
@@ -66,16 +66,16 @@ def change_book(place_id, book_id):
         query = PlaceBook.get(PlaceBook.id == book_id)
     except:
         return {"code":404, "msg":"not found"}, 404
-    data = request.values
-    for key in data:
+    post_data = request.values
+    for key in post_data:
         if key == 'is_validated':
-            if data[key].lower() == 'true':
+            if post_data[key].lower() == 'true':
                 query.is_validated = True
-            elif data[key].lower() == 'false':
+            elif post_data[key].lower() == 'false':
                 query.is_validated = False
         if key == 'date_start':
-            query.date_start = datetime.strptime(data[key], "%Y/%m/%d %H:%M:%S")
+            query.date_start = datetime.strptime(post_data[key], "%Y/%m/%d %H:%M:%S")
         if key == 'number_nights':
-            query.number_nights = int(data[key])
+            query.number_nights = int(post_data[key])
     query.save()
     return query.to_hash()

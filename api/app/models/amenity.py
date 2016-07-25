@@ -1,11 +1,12 @@
+import base
 from peewee import *
-from base import * 
 
-class Amenity(BaseModel):
-    name = CharField(128, null = False)
+class Amenity(base.BaseModel):
+    name = CharField(null=False, max_length=128)
 
     def to_hash(self):
         values = {
             'name': self.name
         }
         return super(Amenity, self).to_hash(values)
+

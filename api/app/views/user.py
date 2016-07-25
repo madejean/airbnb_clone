@@ -16,31 +16,35 @@ def users():
 @app.route('/users', methods=['POST'])
 @as_json
 def create_new_user():
-    data = request.values
-    email_query = User.select().where(User.email == data['email'])
+    post_data = request.values
+    keys = ["first_name", "last_name", "email", "password"]
+    for key in keys:
+        if key not in post_data:
+            return {"code":400, "msg":"incorrect parameters"}, 400
+    email_query = User.select().where(User.email == post_data['email'])
     if email_query.exists():
         out = {
-            'code': 1000, 
+            'code': 10000, 
             'msg': 'Email already exists'
         }
         return out, 409
     try:
         user_row = User.create(
             password = "default",
-            first_name = data['first_name'],
-            last_name = data['last_name'],
-            email = data['email']
+            first_name = post_data['first_name'],
+            last_name = post_data['last_name'],
+            email = post_data['email']
         )
-        user_row.password = user_row.set_password(data['password'])
-        if 'is_admin' in data:
-            if data['is_admin'].lower() == "true":
+        user_row.password = user_row.set_password(post_data['password'])
+        if 'is_admin' in post_data:
+            if post_data['is_admin'].lower() == "true":
                 user_row.is_admin = True
-            elif data['is_admin'].lower() == "false":
+            elif post_data['is_admin'].lower() == "false":
                 user_row.is_admin = False
         user_row.save()
         return user_row.to_hash()
     except:
-        return {"code":404, "msg":"incorrect parameters"}, 404
+        return {"code":400, "msg":"incorrect parameters"}, 400
 
 @app.route('/users/<int:number>', methods=['GET', 'PUT', 'DELETE'])
 @as_json
@@ -50,21 +54,24 @@ def user(number):
             query = User.get(User.id == number)
             return query.to_hash()
         except:
-            return {'error':'user does not exist'}
+            return {'error':'user does not exist'}, 404
     elif request.method == 'PUT':
-        data = request.values
-        query = User.get(User.id == number)
-        if 'first_name' in data:
-            query.first_name = data['first_name']
-        if 'last_name' in data:
-            query.last_name = data['last_name']
-        if 'is_admin' in data:
+        post_data = request.values
+        try:
+            query = User.get(User.id == number)
+        except:
+            return {'error':'user does not exist'}
+        if 'first_name' in post_data:
+            query.first_name = post_data['first_name']
+        if 'last_name' in post_data:
+            query.last_name = post_data['last_name']
+        if 'is_admin' in post_data:
             if post_data['is_admin'].lower() == "true":
                 query.is_admin = True
             elif post_data['is_admin'].lower() == "false":
                 query.is_admin = False
-        if 'password' in data:
-            query.set_password(data['password'])
+        if 'password' in post_data:
+            query.set_password(post_data['password'])
         query.save()
         return query.to_hash()
     else:

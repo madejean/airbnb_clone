@@ -7,7 +7,7 @@ from app.models.place_book import PlaceBook
 from app.models.amenity import Amenity
 from app.models.place_amenity import PlaceAmenities
 
-"""create tables"""
+'''create tables'''
 db.connect()
 db.create_tables([User, State, City, Place, PlaceBook, Amenity, PlaceAmenities], safe = True)
 db.close()

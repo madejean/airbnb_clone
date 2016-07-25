@@ -1,51 +1,71 @@
 import os
 
-env_name = os.environ.get('AIRBNB_ENV')
-environment = ['developement', 'production', 'test']
-database = { enviroment[0]:'airbnb_dev', environment[1]:'airbnb_prod', environment[2]:'airbnb_test' }
+AIRBNB_ENV = os.environ.get('AIRBNB_ENV')
+environments = ["development", "production", "test"]
+database_names = {environments[0]: "airbnb_dev", environments[1]: "airbnb_prod", environments[2]: "airbnb_test"}
+password_dev = os.environ.get('AIRBNB_DATABASE_PWD_DEV')
+password_prod = os.environ.get('AIRBNB_DATABASE_PWD_PROD')
+password_test = os.environ.get('AIRBNB_DATABASE_PWD_TEST')
 
-if env_name == None:
-    print "Please set AIRBNB_ENV environment for production or developpment"
+# check for errors in the environment variable AIRBNB_ENV
+if AIRBNB_ENV == None:
+    print "Please set AIRBNB_ENV environment variable to either %s or %s!" % (environments[0], environments[1])
     quit()
-elif env_name != "development" && env_name != "production" && env_name != 'test':
-    print "wrong value for AIRBNB_ENV"
+elif AIRBNB_ENV != environments[0] and AIRBNB_ENV != environments[1] and AIRBNB_ENV != environments[2]:
+    print "AIRBNB_ENV environment variable has an unsupported value!"
     quit()
 
-if (env_name == environment[0]):
+#check if password was set properly in the respective envionment variable
+if AIRBNB_ENV == environments[0]:
+    if password_dev == None:
+        print "Please set the environment variable AIRBNB_DATABASE_PWD_DEV with your airnbnb_dev password!"
+        quit()
+
+elif AIRBNB_ENV == environments[1]:
+    if password_env == None:
+        print "Please set the environment variable AIRBNB_DATABASE_PWD_PROD with your airnbnb_prod password!"
+        quit()
+else:
+    if password_test == None:
+        print "Please set the environment variable AIRBNB_DATABASE_PWD_TEST with your airnbnb_test password!"
+        quit()
+
+# set appropriate variables depending on development or production
+if AIRBNB_ENV == environments[0]:
     DEBUG = True
-    HOST = 'localhost'
-    PORT = '3333'
+    HOST = "localhost"
+    PORT = 3333
     DATABASE = {
-        'host': '158.69.77.113',
-        'user': 'airbnb_user_dev',
-        'database': database[environment[0]],
-        'port': '3306',
-        'charset': 'utf8',
-        'password': os.environ.get('AIRBNB_DATABASE_PWD_DEV'),
+        "host": "158.69.92.163", 
+        "user": "airbnb_user_dev",
+        "database": database_names[environments[0]],
+        "port": 3306,
+        "charset": "utf8",
+        "password": password_dev,
     }
 
-elif (env_name == environment[1]):
+elif AIRBNB_ENV == environments[1]:
     DEBUG = False
-    HOST = '0.0.0.0'
-    PORT = '3000'
+    HOST = "0.0.0.0"
+    PORT = 3000
     DATABASE = {
-        'host': '158.69.77.113',
-        'user': 'airbnb_user_prod',
-        'database': database[environment[1]],
-        'port': '3306',
-        'charset': 'utf8',
-        'password': os.environ.get('AIRBNB_DATABASE_PWD_PROD'),
+        "host": "158.69.92.163",
+        "user": "airbnb_user_prod",
+        "database": database_names[environments[1]],
+        "port": 3306,
+        "charset": "utf8",
+        "password": password_prod,
     }
-        
+
 else:
     DEBUG = False
-    HOST = 'localhost'
-    PORT = '5555'
+    HOST = "localhost"
+    PORT = 5555
     DATABASE = {
-        'host' : '158.69.77.113',
-        'user' : 'airbnb_user_test',
-        'database' : database[environment[2]],
-        'port' : '3306',
-        'charset' : 'utf8',
-        'password' : os.get.environ.get('AIRBNB_DATABASE_PW_TEST'),
+        "host": "158.69.92.163",
+        "user": "airbnb_user_test",
+        "database": database_names[environments[2]],
+        "port": 3306,
+        "charset": "utf8",
+        "password": password_test,
     }

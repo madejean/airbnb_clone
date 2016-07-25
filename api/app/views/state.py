@@ -18,16 +18,18 @@ def get_states():
 @app.route('/states', methods=['POST'])
 @as_json
 def create_new_state():
-    data = request.values
-    state_query = State.select().where(State.name == data['name'])
+    post_data = request.values
+    if 'name' not in post_data:
+        return {'code':400, 'msg':'bad request'}, 400
+    state_query = State.select().where(State.name == post_data['name'])
     if state_query.exists():
-        out = {'code': 1001, 'msg': 'State already exists'}
+        out = {'code': 10001, 'msg': 'State already exists'}
         return out, 409
-    if 'name' in data:
-        state_row = State.create(name=data['name'])
+    try:
+        state_row = State.create(name=post_data['name'])
         return state_row.to_hash()
-    else:
-        return {'code':404, 'msg':'not found'}, 404
+    except:
+        return {'code':500, 'msg':'database connection error'}, 500
 
 @app.route('/states/<int:number>', methods=['GET', 'DELETE'])
 @as_json
@@ -36,7 +38,12 @@ def state(number):
         query = State.get(State.id == number)
         return query.to_hash()
     else:
-        query = State.select().where(State.id == number).get()
+        try:
+            query = State.select().where(State.id == number).get()
+        except:
+            return {'code':404, 'msg':'state not found'}, 404
         out_json = query.to_hash()
         query.delete_instance()
         return out_json
+        
+           
