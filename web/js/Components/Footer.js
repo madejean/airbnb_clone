@@ -11,7 +11,7 @@ class Footer extends React.Component {
         marginLeft: '10px',
         padding: '0px 10px 0px 10px',
         display: 'block',
-        background: '#e6e6e6',
+        background: '#D3D3D3',
         bottom: '0px',
         }
       }

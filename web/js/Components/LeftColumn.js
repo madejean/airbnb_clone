@@ -11,7 +11,7 @@ class Sidebar extends React.Component {
           justifyContent: 'center',
           width: '300px',
           marginLeft: '10px',
-          background: '#D3D3D3',
+          background: '#e6e6e6',
           padding: '10px',
           height: '100%',
         }

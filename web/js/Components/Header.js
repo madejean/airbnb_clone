@@ -14,8 +14,9 @@ class Header extends React.Component {
       div : {
         width: '200px',
         height: '60px',
+        right: '0px',
         float: 'right',
-        background: '#D3D3D3',
+        background: '#e6e6e6',
       },
       logo : {
         position: 'absolute',
