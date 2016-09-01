@@ -1,5 +1,7 @@
 import React from 'react';
 
+import StateList from './StateItemSelector.js'
+
 class Sidebar extends React.Component {
   render() {
     var borderColor = '#e6e3e3';
@@ -8,7 +10,6 @@ class Sidebar extends React.Component {
           border: '1px solid ' + borderColor,
           display: 'flex',
           flexWrap: 'wrap',
-          justifyContent: 'center',
           width: '300px',
           marginLeft: '10px',
           background: '#e6e6e6',
@@ -19,12 +20,10 @@ class Sidebar extends React.Component {
 
    return (
         <div style={styles.sidebar}>
-          </div>
+          <StateList />
+        </div>
     );
   }
 }
-  /*const sidebar = (props) => (
-  <div style={styles.sidebar}>
-  </div>
-);*/
+
 export default Sidebar;
